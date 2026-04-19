@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEO Outreach · Підбір майданчиків</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F2EC;
+    --surface: #FFFFFF;
+    --surface-alt: #FAF8F3;
+    --ink: #1A1815;
+    --ink-soft: #5C5751;
+    --ink-muted: #908A82;
+    --border: #E4DFD5;
+    --border-soft: #EDE8DD;
+    --accent: #B84A1F;
+    --accent-soft: #F5E8E1;
+    --success: #446B3E;
+    --success-soft: #E4EEE0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Onest', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    min-height: 100vh;
+    padding: 48px 24px 80px;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 28px;
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .title {
+    font-family: 'Fraunces', serif;
+    font-size: 34px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .title-accent {
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-top: 8px;
+  }
+
+  .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* Grid */
+  .grid {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  /* Card */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px;
+  }
+
+  .card + .card { margin-top: 16px; }
+
+  .card-title {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .card-hint {
+    font-size: 12px;
+    color: var(--ink-muted);
+    margin-bottom: 20px;
+  }
+
+  /* Client selector */
+  .client-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .client-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border-soft);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .client-option:hover {
+    border-color: var(--ink-soft);
+  }
+
+  .client-option.active {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+  }
+
+  .client-option input { display: none; }
+
+  .client-name {
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  .client-preset {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-muted);
+  }
+
+  .client-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 4px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .client-divider::before,
+  .client-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-soft);
+  }
+
+  .client-option.ad-hoc {
+    background: var(--surface);
+    border-style: dashed;
+  }
+
+  .client-option.ad-hoc.active {
+    background: #FFF8E1;
+    border-color: #C9A631;
+    border-style: solid;
+  }
+
+  .adhoc-field {
+    display: none;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--border);
+  }
+
+  .adhoc-field.show { display: block; }
+
+  /* Inputs */
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .field + .field { margin-top: 16px; }
+
+  .label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .label-unit {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  input[type="text"], input[type="number"], textarea, select {
+    font-family: inherit;
+    font-size: 14px;
+    padding: 10px 12px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--ink);
+    transition: border-color 0.15s;
+    width: 100%;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: var(--surface);
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* Categories */
+  .cat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .cat-actions {
+    display: flex;
+    gap: 8px;
+    font-size: 12px;
+  }
+
+  .btn-inline {
+    background: none;
+    border: none;
+    color: var(--accent);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .btn-inline:hover { color: var(--ink); }
+
+  .cat-search {
+    margin-bottom: 20px;
+  }
+
+  .cat-groups {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px 32px;
+  }
+
+  @media (max-width: 700px) {
+    .cat-groups { grid-template-columns: 1fr; }
+  }
+
+  .cat-group-title {
+    font-family: 'Fraunces', serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--border-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 11px;
+  }
+
+  .cat-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 5px 0;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1.35;
+    user-select: none;
+  }
+
+  .cat-item input { display: none; }
+
+  .cat-box {
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    position: relative;
+    background: var(--surface);
+    transition: all 0.1s;
+  }
+
+  .cat-item:hover .cat-box {
+    border-color: var(--ink-soft);
+  }
+
+  .cat-item input:checked ~ .cat-box {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .cat-item input:checked ~ .cat-box::after {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 0px;
+    width: 4px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 1.5px 1.5px 0;
+    transform: rotate(45deg);
+  }
+
+  .cat-item.hidden { display: none; }
+
+  .cat-untranslated .cat-box::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    width: 5px;
+    height: 5px;
+    background: #D4A017;
+    border-radius: 50%;
+  }
+
+  /* Footer action */
+  .footer-action {
+    margin-top: 32px;
+    padding: 24px 28px;
+    background: var(--ink);
+    border-radius: 4px;
+    color: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .summary {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #C4BFB6;
+    line-height: 1.8;
+  }
+
+  .summary strong {
+    color: var(--surface);
+    font-weight: 500;
+  }
+
+  .submit-btn {
+    padding: 14px 28px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+
+  .submit-btn:hover { background: #9E3E17; }
+  .submit-btn:disabled { background: #6B6560; cursor: not-allowed; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    padding: 14px 20px;
+    background: var(--success);
+    color: white;
+    border-radius: 3px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.25s;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast.error { background: var(--accent); }
+
+  /* Config banner */
+  .config-banner {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 8px 14px;
+    background: #FFF8E1;
+    border: 1px solid #E8D9A6;
+    border-radius: 3px;
+    margin-bottom: 24px;
+    color: #6B5A1F;
+  }
+
+  .config-banner code {
+    background: rgba(0,0,0,0.06);
+    padding: 1px 4px;
+    border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <div>
+      <h1 class="title">SEO Outreach · <span class="title-accent">підбір майданчиків</span></h1>
+      <div class="subtitle">Collaborator API → Ahrefs → Google Sheets</div>
+    </div>
+    <div class="meta">v 1.0 · internal</div>
+  </header>
+
+  <div class="grid">
+
+    <!-- LEFT COLUMN -->
+    <div>
+      <!-- Client -->
+      <div class="card">
+        <div class="card-title">Клієнт</div>
+        <div class="card-hint">Параметри підставляться автоматично</div>
+        <div class="client-group" id="clients"></div>
+
+        <div class="adhoc-field" id="adhocField">
+          <div class="field">
+            <div class="label">
+              <span>Назва проєкту / сайту</span>
+            </div>
+            <input type="text" id="adhoc_name" placeholder="наприклад: site-name.com.ua">
+          </div>
+          <div class="card-hint" style="margin-top: 10px; margin-bottom: 0;">
+            При разовому підборі стоп-лист з історії клієнта не застосовується — підбираються всі площадки, що підходять за фільтрами.
+          </div>
+        </div>
+      </div>
+
+      <!-- Budget & Limits -->
+      <div class="card">
+        <div class="card-title">Бюджет та ліміти</div>
+        <div class="card-hint">Можна перевизначити пресет клієнта</div>
+
+        <div class="field">
+          <div class="label">
+            <span>Бюджет на місяць</span>
+            <span class="label-unit">UAH</span>
+          </div>
+          <input type="number" id="budget" placeholder="15000">
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <div class="label">
+              <span>Макс. площадок</span>
+              <span class="label-unit">шт</span>
+            </div>
+            <input type="number" id="max_sites" placeholder="20">
+          </div>
+          <div class="field">
+            <div class="label">
+              <span>Податок</span>
+              <span class="label-unit">%</span>
+            </div>
+            <input type="number" id="tax_rate" value="17.5" step="0.1">
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="card">
+        <div class="card-title">Фільтри якості</div>
+
+        <div class="field">
+          <div class="label">
+            <span>Гео (країна)</span>
+          </div>
+          <select id="country">
+            <option value="1">Україна</option>
+            <option value="2">Польща</option>
+            <option value="3">Казахстан</option>
+            <option value="4">США</option>
+          </select>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <div class="label">
+              <span>DR Ahrefs</span>
+              <span class="label-unit">від</span>
+            </div>
+            <input type="number" id="min_dr" placeholder="20">
+          </div>
+          <div class="field">
+            <div class="label">
+              <span>Трафік</span>
+              <span class="label-unit">тис/міс</span>
+            </div>
+            <input type="number" id="min_traffic" placeholder="2">
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="label">
+            <span>Ahrefs organic traffic</span>
+            <span class="label-unit">від</span>
+          </div>
+          <input type="number" id="min_ahrefs_traffic" placeholder="2000">
+        </div>
+
+        <div class="field">
+          <div class="label">
+            <span>Ключові слова (опціонально)</span>
+          </div>
+          <input type="text" id="keywords" placeholder="seo, інвестиції, крипта">
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="card">
+      <div class="cat-header">
+        <div>
+          <div class="card-title">Тематики майданчиків</div>
+          <div class="card-hint">Оберіть від 1 до 44 категорій · <span id="catCounter">0</span> обрано</div>
+        </div>
+        <div class="cat-actions">
+          <button class="btn-inline" onclick="selectAllCats()">обрати всі</button>
+          <button class="btn-inline" onclick="clearCats()">очистити</button>
+        </div>
+      </div>
+
+      <div class="cat-search">
+        <input type="text" id="catSearch" placeholder="Пошук по темі..." oninput="filterCats()">
+      </div>
+
+      <div class="cat-groups" id="catGroups"></div>
+    </div>
+  </div>
+
+  <!-- Footer action -->
+  <div class="footer-action">
+    <div class="summary" id="summary">
+      <strong>Клієнт:</strong> не обрано<br>
+      <strong>Бюджет:</strong> — · <strong>Тем:</strong> 0 · <strong>Max:</strong> — площадок
+    </div>
+    <button class="submit-btn" id="submitBtn" onclick="submit()">Запустити підбір →</button>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ⚠ REPLACE WITH YOUR N8N WEBHOOK URL
+  const WEBHOOK_URL = 'https://adindexga.app.n8n.cloud/webhook/seo-outreach';
+
+  // Client presets (edit for real clients)
+  const CLIENTS = [
+    { id: 'alp', name: 'Alp.com.ua', project_id: 44753, budget: 15000, max_sites: 18, country: 1, min_dr: 25, min_traffic: 3, min_ahrefs_traffic: 2500, keywords: 'фінанси, кредити', default_cats: ['business_finance','news','marketing','seo'] },
+    { id: 'holz', name: 'Holz.ua', project_id: 44799, budget: 12000, max_sites: 15, country: 1, min_dr: 20, min_traffic: 2, min_ahrefs_traffic: 2000, keywords: '', default_cats: ['construction','interior','family','dacha'] },
+    { id: 'elikari', name: 'e-likari.com.ua', project_id: 55712, budget: 18000, max_sites: 20, country: 1, min_dr: 20, min_traffic: 2, min_ahrefs_traffic: 2000, keywords: 'здоров\'я, медицина, лікування', default_cats: ['health','sport','psychology','news'] }
+  ];
+
+  // Categories (ua, en, alias, group, untranslated)
+  const CATEGORIES = [
+    // Бізнес
+    { ua: 'Бізнес і фінанси', en: 'Business and Finance', alias: 'business_finance', group: 'biz' },
+    { ua: 'Маркетинг', en: 'Marketing', alias: 'marketing', group: 'biz' },
+    { ua: 'SEO', en: 'SEO', alias: 'seo', group: 'biz' },
+    { ua: 'Робота', en: 'Work', alias: 'jobs', group: 'biz' },
+    { ua: 'Криптовалюти', en: 'Cryptocurrencies', alias: 'crypto', group: 'biz' },
+    { ua: 'Нерухомість', en: 'Real estate', alias: 'realestate', group: 'biz' },
+    { ua: 'Право та юриспруденція', en: 'Law and jurisprudence', alias: 'law', group: 'biz' },
+    { ua: 'Логістика та перевезення', en: 'Logistics and freight', alias: 'logistics', group: 'biz' },
+    // Tech
+    { ua: 'Технології', en: 'Technologies', alias: 'tech', group: 'tech' },
+    { ua: 'Інтернет', en: 'Internet', alias: 'internet', group: 'tech' },
+    { ua: 'Веб дизайн', en: 'Web design', alias: 'webdesign', group: 'tech' },
+    { ua: 'Веб-розробка', en: 'Web development', alias: 'webdev', group: 'tech' },
+    { ua: 'Мобільні технології', en: 'Mobile technologies', alias: 'mobile', group: 'tech' },
+    { ua: 'Комп\'ютери та ПЗ', en: 'Computers and software', alias: 'software', group: 'tech' },
+    { ua: 'Комп\'ютерні ігри', en: 'Computer games', alias: 'games', group: 'tech' },
+    { ua: 'Електроніка та техніка', en: 'Electronics and Technology', alias: 'electronics', group: 'tech' },
+    // Media
+    { ua: 'ЗМІ (новини)', en: 'Media (News)', alias: 'news', group: 'media' },
+    { ua: 'Міські портали', en: 'City portals', alias: 'city', group: 'media' },
+    { ua: 'Суспільство, політика та закони', en: 'Society, politics and laws', alias: 'politics', group: 'media' },
+    { ua: 'Інше', en: 'Other', alias: 'other', group: 'media' },
+    // Home
+    { ua: 'Дача', en: 'Dacha', alias: 'dacha', group: 'home' },
+    { ua: 'Домашні тварини', en: 'Pets', alias: 'pets', group: 'home' },
+    { ua: 'Будівництво та ремонт', en: 'Construction and repair', alias: 'construction', group: 'home' },
+    { ua: 'Меблі та інтер\'єр', en: 'Furniture and interior', alias: 'interior', group: 'home' },
+    { ua: 'Дім та сім\'я', en: 'Home and family', alias: 'family', group: 'home' },
+    { ua: 'Кулінарія', en: 'Cooking', alias: 'cooking', group: 'home' },
+    { ua: 'Хендмейд (DIY)', en: 'Handmade (DIY)', alias: 'handmade', group: 'home' },
+    // Health & Sport
+    { ua: 'Здоров\'я та медицина', en: 'Health and medicine', alias: 'health', group: 'health' },
+    { ua: 'Спорт', en: 'Sport', alias: 'sport', group: 'health' },
+    { ua: 'Психологія та розвиток', en: 'Psychology and personal development', alias: 'psychology', group: 'health' },
+    // Lifestyle
+    { ua: 'Мода та краса', en: 'Fashion and beauty', alias: 'fashion', group: 'lifestyle' },
+    { ua: 'Лайфстайл', en: 'Лайфстал', alias: 'lifestyle', group: 'lifestyle', untranslated: true },
+    { ua: 'Шопінг', en: 'Shopping', alias: 'shopping', group: 'lifestyle' },
+    { ua: 'Фотографія', en: 'Photography', alias: 'photo', group: 'lifestyle' },
+    // Culture
+    { ua: 'Культура та мистецтво', en: 'Culture and art', alias: 'culture', group: 'culture' },
+    { ua: 'Освіта та наука', en: 'Education and Science', alias: 'education', group: 'culture' },
+    { ua: 'Музика та кіно', en: 'Music and cinema', alias: 'music_cinema', group: 'culture' },
+    { ua: 'Релігія', en: 'Religion', alias: 'religion', group: 'culture' },
+    { ua: 'Астрологія та езотерика', en: 'Astrology and esoterics', alias: 'esoteric', group: 'culture' },
+    // Leisure
+    { ua: 'Розваги та хобі', en: 'Entertainment and hobbies', alias: 'entertainment', group: 'leisure' },
+    { ua: 'Туризм та подорожі', en: 'Tourism and travel', alias: 'travel', group: 'leisure' },
+    { ua: 'Авто та мото', en: 'Авто та мото', alias: 'auto', group: 'leisure', untranslated: true },
+    { ua: 'Виробництво та с/г', en: 'Production and agriculture', alias: 'agri', group: 'leisure' },
+    { ua: 'Екологія', en: 'Ecology', alias: 'ecology', group: 'leisure' }
+  ];
+
+  const GROUPS = {
+    biz: 'Бізнес та фінанси',
+    tech: 'Технології',
+    media: 'Медіа та суспільство',
+    home: 'Дім та родина',
+    health: 'Здоров\'я та спорт',
+    lifestyle: 'Мода та стиль',
+    culture: 'Культура та освіта',
+    leisure: 'Подорожі та дозвілля'
+  };
+
+  let selectedClient = null;
+
+  const AD_HOC = {
+    id: 'ad-hoc',
+    name: 'Разовий підбір',
+    isAdHoc: true
+  };
+
+  // Render clients
+  function renderClients() {
+    const container = document.getElementById('clients');
+    const presets = CLIENTS.map(c => `
+      <label class="client-option" data-id="${c.id}">
+        <input type="radio" name="client" value="${c.id}">
+        <span class="client-name">${c.name}</span>
+        <span class="client-preset">${c.budget.toLocaleString('uk')} UAH · ${c.max_sites} шт</span>
+      </label>
+    `).join('');
+
+    const adhoc = `
+      <div class="client-divider">або</div>
+      <label class="client-option ad-hoc" data-id="ad-hoc">
+        <input type="radio" name="client" value="ad-hoc">
+        <span class="client-name">Разовий підбір</span>
+        <span class="client-preset">без пресету</span>
+      </label>
+    `;
+
+    container.innerHTML = presets + adhoc;
+
+    container.querySelectorAll('.client-option').forEach(opt => {
+      opt.addEventListener('click', () => selectClient(opt.dataset.id));
+    });
+  }
+
+  function selectClient(id) {
+    document.querySelectorAll('.client-option').forEach(o => o.classList.toggle('active', o.dataset.id === id));
+    const adhocField = document.getElementById('adhocField');
+
+    if (id === 'ad-hoc') {
+      selectedClient = AD_HOC;
+      adhocField.classList.add('show');
+      // Clear all fields to empty defaults
+      document.getElementById('budget').value = '';
+      document.getElementById('max_sites').value = '';
+      document.getElementById('country').value = '1';
+      document.getElementById('min_dr').value = '20';
+      document.getElementById('min_traffic').value = '2';
+      document.getElementById('min_ahrefs_traffic').value = '2000';
+      document.getElementById('keywords').value = '';
+      clearCats();
+    } else {
+      selectedClient = CLIENTS.find(c => c.id === id);
+      adhocField.classList.remove('show');
+      document.getElementById('adhoc_name').value = '';
+
+      document.getElementById('budget').value = selectedClient.budget;
+      document.getElementById('max_sites').value = selectedClient.max_sites;
+      document.getElementById('country').value = selectedClient.country;
+      document.getElementById('min_dr').value = selectedClient.min_dr;
+      document.getElementById('min_traffic').value = selectedClient.min_traffic;
+      document.getElementById('min_ahrefs_traffic').value = selectedClient.min_ahrefs_traffic;
+      document.getElementById('keywords').value = selectedClient.keywords;
+
+      clearCats();
+      selectedClient.default_cats.forEach(alias => {
+        const cb = document.querySelector(`input[data-alias="${alias}"]`);
+        if (cb) cb.checked = true;
+      });
+    }
+    updateSummary();
+  }
+
+  // Render categories
+  function renderCategories() {
+    const container = document.getElementById('catGroups');
+    const byGroup = {};
+    CATEGORIES.forEach(c => {
+      if (!byGroup[c.group]) byGroup[c.group] = [];
+      byGroup[c.group].push(c);
+    });
+
+    container.innerHTML = Object.entries(GROUPS).map(([key, name]) => {
+      const cats = byGroup[key] || [];
+      return `
+        <div>
+          <div class="cat-group-title">${name}</div>
+          ${cats.map(c => `
+            <label class="cat-item ${c.untranslated ? 'cat-untranslated' : ''}" data-ua="${c.ua.toLowerCase()}" title="${c.en}">
+              <input type="checkbox" data-alias="${c.alias}" data-en="${c.en}" onchange="updateSummary()">
+              <span class="cat-box"></span>
+              <span>${c.ua}</span>
+            </label>
+          `).join('')}
+        </div>
+      `;
+    }).join('');
+  }
+
+  function selectAllCats() {
+    document.querySelectorAll('input[data-alias]').forEach(cb => cb.checked = true);
+    updateSummary();
+  }
+
+  function clearCats() {
+    document.querySelectorAll('input[data-alias]').forEach(cb => cb.checked = false);
+    updateSummary();
+  }
+
+  function filterCats() {
+    const q = document.getElementById('catSearch').value.toLowerCase().trim();
+    document.querySelectorAll('.cat-item').forEach(item => {
+      item.classList.toggle('hidden', q && !item.dataset.ua.includes(q));
+    });
+  }
+
+  function getSelectedCategories() {
+    return Array.from(document.querySelectorAll('input[data-alias]:checked')).map(cb => ({
+      alias: cb.dataset.alias,
+      en: cb.dataset.en
+    }));
+  }
+
+  function updateSummary() {
+    const selected = getSelectedCategories();
+    const budget = document.getElementById('budget').value;
+    const max = document.getElementById('max_sites').value;
+    document.getElementById('catCounter').textContent = selected.length;
+
+    let clientLabel = 'не обрано';
+    if (selectedClient) {
+      if (selectedClient.isAdHoc) {
+        const adhocName = document.getElementById('adhoc_name').value.trim();
+        clientLabel = adhocName ? `Разовий · ${adhocName}` : 'Разовий підбір';
+      } else {
+        clientLabel = selectedClient.name;
+      }
+    }
+
+    document.getElementById('summary').innerHTML = `
+      <strong>Клієнт:</strong> ${clientLabel}<br>
+      <strong>Бюджет:</strong> ${budget ? Number(budget).toLocaleString('uk') + ' UAH' : '—'} · 
+      <strong>Тем:</strong> ${selected.length} · 
+      <strong>Max:</strong> ${max || '—'} площадок
+    `;
+  }
+
+  async function submit() {
+    const btn = document.getElementById('submitBtn');
+    const cats = getSelectedCategories();
+
+    if (!selectedClient) return showToast('Оберіть клієнта', 'error');
+    if (cats.length === 0) return showToast('Оберіть хоча б одну тематику', 'error');
+
+    let clientName, clientId, isAdHoc = false, projectId = null;
+    if (selectedClient.isAdHoc) {
+      const adhocName = document.getElementById('adhoc_name').value.trim();
+      if (!adhocName) return showToast('Вкажіть назву проєкту / сайту', 'error');
+      clientName = adhocName;
+      clientId = 'ad-hoc';
+      isAdHoc = true;
+      projectId = null;
+    } else {
+      clientName = selectedClient.name;
+      clientId = selectedClient.id;
+      projectId = selectedClient.project_id;
+    }
+
+    const payload = {
+      client: clientName,
+      client_id: clientId,
+      project_id: projectId,
+      is_ad_hoc: isAdHoc,
+      skip_stoplist: isAdHoc,
+      budget: Number(document.getElementById('budget').value),
+      max_sites: Number(document.getElementById('max_sites').value),
+      tax_rate: Number(document.getElementById('tax_rate').value) / 100,
+      country_id: Number(document.getElementById('country').value),
+      min_dr: Number(document.getElementById('min_dr').value),
+      min_traffic: Number(document.getElementById('min_traffic').value),
+      min_ahrefs_traffic: Number(document.getElementById('min_ahrefs_traffic').value),
+      keywords: document.getElementById('keywords').value.split(',').map(s => s.trim()).filter(Boolean),
+      categories_en: cats.map(c => c.en),
+      categories_alias: cats.map(c => c.alias),
+      timestamp: new Date().toISOString()
+    };
+
+    btn.disabled = true;
+    btn.textContent = 'Запускаємо...';
+
+    try {
+      const res = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        showToast(`✓ Підбір запущено. Очікуйте повідомлення у Telegram.`, 'success');
+        btn.textContent = 'Запустити підбір →';
+      } else {
+        showToast(`Помилка: HTTP ${res.status}`, 'error');
+        btn.textContent = 'Запустити підбір →';
+      }
+    } catch (e) {
+      // For prototype: if webhook not configured, show payload in console
+      console.log('Payload, ready to send to webhook:', payload);
+      showToast('Webhook не налаштовано. Payload у консолі (F12).', 'error');
+      btn.textContent = 'Запустити підбір →';
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  function showToast(msg, type) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show ' + (type || '');
+    setTimeout(() => t.classList.remove('show'), 4000);
+  }
+
+  // Listeners for live summary
+  ['budget', 'max_sites', 'adhoc_name'].forEach(id => {
+    document.getElementById(id).addEventListener('input', updateSummary);
+  });
+
+  // Init
+  renderClients();
+  renderCategories();
+  updateSummary();
+</script>
+
+</body>
+</html>
