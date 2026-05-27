@@ -526,6 +526,21 @@
             <option value="4">США</option>
           </select>
         </div>
+        <div class="field">
+          <div class="label">
+            <span>Мова майданчика</span>
+          </div>
+          <select id="language_id">
+            <option value="">Будь-яка</option>
+            <option value="3">Українська</option>
+            <option value="2">Російська</option>
+            <option value="1">English</option>
+            <option value="11">Polski</option>
+            <option value="4">Deutsch</option>
+            <option value="6">Español</option>
+            <option value="10">Français</option>
+          </select>
+        </div>
 
         <div class="field-row">
           <div class="field">
@@ -720,6 +735,7 @@
       document.getElementById('budget').value = '';
       document.getElementById('max_sites').value = '';
       document.getElementById('country').value = '1';
+      document.getElementById('language_id').value = '';
       document.getElementById('min_dr').value = '20';
       document.getElementById('min_traffic').value = '2';
       document.getElementById('min_ahrefs_traffic').value = '2000';
@@ -733,6 +749,7 @@
       document.getElementById('budget').value = selectedClient.budget;
       document.getElementById('max_sites').value = selectedClient.max_sites;
       document.getElementById('country').value = selectedClient.country;
+      document.getElementById('language_id').value = '';
       document.getElementById('min_dr').value = selectedClient.min_dr;
       document.getElementById('min_traffic').value = selectedClient.min_traffic;
       document.getElementById('min_ahrefs_traffic').value = selectedClient.min_ahrefs_traffic;
@@ -852,6 +869,7 @@
       max_sites: Number(document.getElementById('max_sites').value),
       tax_rate: Number(document.getElementById('tax_rate').value) / 100,
       country_id: Number(document.getElementById('country').value),
+      language_id: document.getElementById('language_id').value ? Number(document.getElementById('language_id').value) : null,
       min_dr: Number(document.getElementById('min_dr').value),
       min_traffic: Number(document.getElementById('min_traffic').value),
       min_ahrefs_traffic: Number(document.getElementById('min_ahrefs_traffic').value),
