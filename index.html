@@ -520,6 +520,7 @@
             <span>Гео (країна)</span>
           </div>
           <select id="country">
+            <option value="">Будь-яка</option>
             <option value="1">Україна</option>
             <option value="2">Польща</option>
             <option value="3">Казахстан</option>
@@ -868,7 +869,7 @@
       budget: Number(document.getElementById('budget').value),
       max_sites: Number(document.getElementById('max_sites').value),
       tax_rate: Number(document.getElementById('tax_rate').value) / 100,
-      country_id: Number(document.getElementById('country').value),
+      country_id: document.getElementById('country').value ? Number(document.getElementById('country').value) : undefined,
       language_id: document.getElementById('language_id').value ? Number(document.getElementById('language_id').value) : null,
       min_dr: Number(document.getElementById('min_dr').value),
       min_traffic: Number(document.getElementById('min_traffic').value),
