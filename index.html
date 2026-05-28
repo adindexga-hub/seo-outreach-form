@@ -509,6 +509,13 @@
             <input type="number" id="tax_rate" value="17.5" step="0.1">
           </div>
         </div>
+        <div class="field">
+          <div class="label">
+            <span>Виключати сайти з історією</span>
+            <span class="label-unit">N+ розміщень</span>
+          </div>
+          <input type="number" id="max_placements" placeholder="2" min="1">
+        </div>
       </div>
 
       <!-- Filters -->
@@ -735,6 +742,7 @@
       // Clear all fields to empty defaults
       document.getElementById('budget').value = '';
       document.getElementById('max_sites').value = '';
+      document.getElementById('max_placements').value = '';
       document.getElementById('country').value = '1';
       document.getElementById('language_id').value = '';
       document.getElementById('min_dr').value = '20';
@@ -749,6 +757,7 @@
 
       document.getElementById('budget').value = selectedClient.budget;
       document.getElementById('max_sites').value = selectedClient.max_sites;
+      document.getElementById('max_placements').value = '';
       document.getElementById('country').value = selectedClient.country;
       document.getElementById('language_id').value = '';
       document.getElementById('min_dr').value = selectedClient.min_dr;
@@ -868,6 +877,7 @@
       skip_stoplist: isAdHoc,
       budget: Number(document.getElementById('budget').value),
       max_sites: Number(document.getElementById('max_sites').value),
+      max_placements: Number(document.getElementById('max_placements').value) || 2,
       tax_rate: Number(document.getElementById('tax_rate').value) / 100,
       country_id: document.getElementById('country').value ? Number(document.getElementById('country').value) : undefined,
       language_id: document.getElementById('language_id').value ? Number(document.getElementById('language_id').value) : null,
